@@ -12,4 +12,4 @@ A simple and interactive Tic Tac Toe game built with React, TypeScript, and Tail
 - **TypeScript**: Type-safe JavaScript for better code reliability.
 - **Tailwind CSS**: Utility-first CSS framework for styling.
 
-## Thx for checking out)
+**Thx for checking out)**
