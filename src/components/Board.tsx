@@ -1,7 +1,7 @@
-interface Props {
+type Props = {
   board: string[][];
-  handleChangeBoard: Function;
-}
+  handleChangeBoard: (i: number, index: number) => void;
+};
 
 export default function Board({ board, handleChangeBoard }: Props) {
   return (
@@ -11,7 +11,7 @@ export default function Board({ board, handleChangeBoard }: Props) {
           {el.map((_, col) => (
             <div
               key={col}
-              className="w-20 h-20 text-6xl font-semibold bg-slate-200 text-center cursor-pointer"
+              className="w-20 h-20 text-6xl font-semibold bg-slate-200 dark:bg-slate-700 text-center cursor-pointer"
               onClick={() => handleChangeBoard(row, col)}
             >
               {el[col]}

@@ -1,5 +1,9 @@
 import { useState } from "react";
 import Board from "./components/Board";
+import { ThemeProvider } from "./components/ThemeProvider";
+import ToggleButton from "./components/ToggleButton";
+
+type Winner = "X" | "O" | "Draw" | "";
 
 export default function App() {
   const [isX, setIsX] = useState<boolean>(true);
@@ -8,7 +12,7 @@ export default function App() {
     ["", "", ""],
     ["", "", ""],
   ]);
-  const [winner, setWinner] = useState<string>();
+  const [winner, setWinner] = useState<Winner>();
 
   const handleChangeBoard = (i: number, index: number): void => {
     if (board[i][index] !== "" || winner) {
@@ -67,18 +71,25 @@ export default function App() {
   };
 
   return (
-    <div className="w-full h-screen flex flex-col justify-between items-center">
-      <h1 className="text-center text-5xl font-semibold p-2">Tic-Tac-Toe</h1>
+    <div className="transition w-full h-screen flex flex-col justify-between items-center bg-white dark:bg-[#333] dark:text-white">
+      <div className="w-full flex justify-evenly p-3">
+        <h1 className="text-center text-3xl sm:text-5xl font-semibold">
+          Tic-Tac-Toe⭕❌
+        </h1>
+        <ThemeProvider>
+          <div>
+            <ToggleButton />
+          </div>
+        </ThemeProvider>
+      </div>
       <div className="w-full h-screen flex flex-col justify-center items-center gap-5">
-        {winner && (
-          <h1 className="text-3xl">
-            {winner !== "Draw" ? "Winner is " : ""}
-            <span className="text-4xl">{winner}</span>
-          </h1>
-        )}
+        <h1 className="text-3xl">
+          {winner ? (winner !== "Draw" ? "Winner is " : "") : "Next is "}
+          <span className="text-4xl">{winner ? winner : isX ? "X" : "O"}</span>
+        </h1>
         <Board board={board} handleChangeBoard={handleChangeBoard} />
         <button
-          className="py-1 px-4 bg-slate-200 rounded-md"
+          className="py-1 px-4 bg-slate-200 dark:bg-slate-700 rounded-md"
           onClick={handleResetBoard}
         >
           Reset
