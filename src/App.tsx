@@ -3,7 +3,9 @@ import Board from "./components/Board";
 import { ThemeProvider } from "./components/ThemeProvider";
 import ToggleButton from "./components/ToggleButton";
 
-type Winner = "X" | "O" | "Draw" | "";
+type Winner =
+  | { winner: "X" | "O" | "Draw" | ""; position?: number[][] | null }
+  | "";
 
 export default function App() {
   const [isX, setIsX] = useState<boolean>(true);
@@ -53,27 +55,69 @@ export default function App() {
       [updatedBoard[0][0], updatedBoard[1][1], updatedBoard[2][2]],
       [updatedBoard[0][2], updatedBoard[1][1], updatedBoard[2][0]],
     ];
+    const boardPatterns: number[][][] = [
+      [
+        [0, 0],
+        [0, 1],
+        [0, 2],
+      ],
+      [
+        [1, 0],
+        [1, 1],
+        [1, 2],
+      ],
+      [
+        [2, 0],
+        [2, 1],
+        [2, 2],
+      ],
+      [
+        [0, 0],
+        [1, 0],
+        [2, 0],
+      ],
+      [
+        [0, 1],
+        [1, 1],
+        [2, 1],
+      ],
+      [
+        [0, 2],
+        [1, 2],
+        [2, 2],
+      ],
+      [
+        [0, 0],
+        [1, 1],
+        [2, 2],
+      ],
+      [
+        [0, 2],
+        [1, 1],
+        [2, 0],
+      ],
+    ];
 
-    for (let pattern of winningPatterns) {
-      if (pattern.every((cell) => cell === "x")) {
-        setWinner("X");
+    for (let i = 0; i < winningPatterns.length; i++) {
+      if (winningPatterns[i].every((cell) => cell === "x")) {
+        setWinner({ winner: "X", position: boardPatterns[i] });
         return;
       }
-      if (pattern.every((cell) => cell === "o")) {
-        setWinner("O");
+      if (winningPatterns[i].every((cell) => cell === "o")) {
+        setWinner({ winner: "X", position: boardPatterns[i] });
         return;
       }
     }
 
     if (updatedBoard.every((row) => row.every((cell) => cell !== ""))) {
-      setWinner("Draw");
+      setWinner({ winner: "Draw" });
     }
   };
 
   return (
-    <div className="transition w-full h-screen flex flex-col justify-between items-center bg-white dark:bg-[#333] dark:text-white">
-      <div className="w-full flex justify-evenly p-3">
-        <h1 className="text-center text-3xl sm:text-5xl font-semibold">
+    <div className="transition w-full h-screen flex flex-col justify-between items-center bg-white dark:bg-[#333] dark:text-slate-400">
+      <div className="w-full flex p-3">
+        <h1 className="text-center text-3xl flex-1 sm:text-5xl font-semibold">
           Tic-Tac-Toe⭕❌
         </h1>
         <ThemeProvider>
@@ -84,10 +128,18 @@ export default function App() {
       </div>
       <div className="w-full h-screen flex flex-col justify-center items-center gap-5">
         <h1 className="text-3xl">
-          {winner ? (winner !== "Draw" ? "Winner is " : "") : "Next is "}
-          <span className="text-4xl">{winner ? winner : isX ? "X" : "O"}</span>
+          {winner ? (winner.winner !== "Draw" ? "Winner is " : "") : "Next is "}
+          <span className="text-4xl">
+            {winner ? winner.winner : isX ? "X" : "O"}
+          </span>
         </h1>
-        <Board board={board} handleChangeBoard={handleChangeBoard} />
+        <Board
+          board={board}
+          handleChangeBoard={handleChangeBoard}
+          winningPositions={
+            winner ? (winner?.position ? winner?.position : null) : null
+          }
+        />
         <button
           className="py-1 px-4 bg-slate-200 dark:bg-slate-700 rounded-md"
           onClick={handleResetBoard}
